@@ -45,10 +45,6 @@
                     Login
                 </button>
             </form>
-
-            <div class="mt-12 flex justify-center gap-4 text-xs text-gray-400">
-                <a href="#">Privacy Policy</a> <span>•</span> <a href="#">Terms & Conditions</a>
-            </div>
         </div>
 
         <div class="hidden md:flex w-2/5 bg-emerald-500 p-12 text-white flex-col items-center justify-center text-center">

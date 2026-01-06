@@ -14,7 +14,7 @@
             <h2 class="text-4xl font-bold mb-4">Welcome Back!</h2>
             <div class="w-12 h-1 bg-white mx-auto mb-6 opacity-50"></div>
             <p class="mb-10 text-emerald-50 font-light">To keep connected with us please login with your personal info.</p>
-            <a href="../login.php" class="border-2 border-white text-white font-bold py-3 px-12 rounded-full hover:bg-white hover:text-emerald-500 transition-all">
+            <a href="../index.php" class="border-2 border-white text-white font-bold py-3 px-12 rounded-full hover:bg-white hover:text-emerald-500 transition-all">
                 Sign In
             </a>
         </div>
