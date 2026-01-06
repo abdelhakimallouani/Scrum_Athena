@@ -1,19 +1,36 @@
 <?php
 
-class Sprint {
-    
+class Sprint
+{
+
     protected $idSprint;
     protected $titre;
-    protected $statut;
     protected $dateDebut;
     protected $dateFin;
+    protected $idProjet;
 
-    public function __construct($idSprint,$titre,$statut,$dateDebut,$dateFin)
+    public function __construct($titre, $dateDebut, $dateFin, $idProjet)
     {
-        $this->idSprint = $idSprint;
-        $this->titre = $titre ;
-        $this->statut = $statut;
+        $this->titre = $titre;
         $this->dateDebut = $dateDebut;
         $this->dateFin = $dateFin;
+        $this->idProjet = $idProjet;
+    }
+
+    public function getTitre()
+    {
+        return $this->titre;
+    }
+    public function getDateDebut()
+    {
+        return $this->dateDebut;
+    }
+    public function getDateFin()
+    {
+        return $this->dateFin;
+    }
+    public function getProjet()
+    {
+        return $this->idProjet;
     }
 }
