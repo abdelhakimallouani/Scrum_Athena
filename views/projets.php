@@ -4,6 +4,13 @@ if (!isset($_SESSION['user'])) {
     header("Location: ../index.php");
     exit;
 }
+
+require_once '../config/config_db.php';
+require_once '../repositories/ProjetRepository.php';
+
+$repo = new ProjetRepository();
+$projets = $repo->getAllByChef($_SESSION['user']['id_user']);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,7 +18,7 @@ if (!isset($_SESSION['user'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../src/output.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>Athena Scrum</title>
 </head>
@@ -105,31 +112,45 @@ if (!isset($_SESSION['user'])) {
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-                <div class="bg-[#e9eceb] p-6 rounded-2xl hover:shadow-md transition-shadow group">
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="bg-white p-3 rounded-lg text-emerald-500 shadow-sm">
-                            <i class="fas fa-project-diagram text-xl"></i>
+                <?php foreach ($projets as $projet): ?>
+                    <div class="bg-[#e9eceb] p-6 rounded-2xl hover:shadow-md transition-shadow group">
+
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="bg-white p-3 rounded-lg text-emerald-500 shadow-sm">
+                                <i class="fas fa-project-diagram text-xl"></i>
+                            </div>
+                            <?php
+                            $status = $projet['statut'];
+                            if ($status === 'inactive') {
+                                $class = 'bg-red-100 text-red-600';
+                            } else {
+                                $class = 'bg-emerald-100 text-emerald-600';
+                            }
+                            ?>
+
+                            <span class="<?= $class ?> text-[10px] font-bold px-2 py-1 rounded-full uppercase">
+                                <?= $projet['statut'] ?>
+                            </span>
                         </div>
-                        <span class="bg-emerald-100 text-emerald-600 text-[10px] font-bold px-2 py-1 rounded-full uppercase">En cours</span>
-                    </div>
 
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">Refonte Plateforme Athena</h3>
-                    <p class="text-xs text-gray-500 line-clamp-2 mb-6">
-                        Mise en place d'une architecture orientée objet pour la gestion commerciale des sprints.
-                    </p>
+                        <h3 class="text-lg font-bold text-gray-800 mb-2">
+                            <?= htmlspecialchars($projet['titre']) ?>
+                        </h3>
 
-                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-                        <div class="flex -space-x-2">
-                            <img class="w-7 h-7 rounded-full border-2 border-white" src="https://ui-avatars.com/api/?name=Membre+1" alt="">
-                            <img class="w-7 h-7 rounded-full border-2 border-white" src="https://ui-avatars.com/api/?name=Membre+2" alt="">
-                            <div class="w-7 h-7 rounded-full bg-gray-300 border-2 border-white flex items-center justify-center text-[10px] text-gray-600">+3</div>
+                        <p class="text-xs text-gray-500 line-clamp-2 mb-6">
+                            <?= htmlspecialchars($projet['description']) ?>
+                        </p>
+
+                        <div class="flex items-center justify-end border-t border-gray-200 pt-4">
+                            <a href="sprints.php?id_projet=<?= $projet['id_projet'] ?>"
+                                class="text-emerald-500 text-sm font-bold hover:underline">
+                                Voir Sprints ->
+                            </a>
                         </div>
 
-                        <a href="details_projet.php?id=1" class="text-emerald-500 text-sm font-bold hover:underline flex items-center gap-1">
-                            Voir Sprints <i class="fas fa-arrow-right text-xs"></i>
-                        </a>
                     </div>
-                </div>
+                <?php endforeach; ?>
+
             </div>
         </section>
 

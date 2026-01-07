@@ -30,7 +30,7 @@ class Projet
     {
         return $this->statut;
     }
-    public function getChefProjet()
+    public function getIdChefProjet()
     {
         return $this->idChefProjet;
     }

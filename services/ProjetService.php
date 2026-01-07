@@ -20,19 +20,9 @@ class ProjetService
             $data['description'],
             $data['statut'],
             $data['id_chef_projet']
-            
+
         );
 
         return $this->repo->create($projet);
-
-        public function listProjets()
-    {
-        if ($_SESSION['user']['role'] === 'ADMIN') {
-            // option: get all projets
-        }
-
-        return $this->repo->getAllByChef($_SESSION['user']['id_user']);
-    }
-
     }
 }
