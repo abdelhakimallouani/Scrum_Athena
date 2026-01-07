@@ -34,4 +34,13 @@ class ProjetRepository
         $stmt->execute([$idChef]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getProjetById(int $id_projet): ?array {
+    $stmt = $this->db->prepare("SELECT * FROM projets WHERE id_projet = ?");
+    $stmt->execute([$id_projet]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    // Retourne les données ou null si le projet n'existe pas
+    return $result ?: null;
+}
 }

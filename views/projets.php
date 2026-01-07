@@ -142,7 +142,7 @@ $projets = $repo->getAllByChef($_SESSION['user']['id_user']);
                         </p>
 
                         <div class="flex items-center justify-end border-t border-gray-200 pt-4">
-                            <a href="sprints.php?id_projet=<?= $projet['id_projet'] ?>"
+                            <a href="detail_projet.php?id=<?= $projet['id_projet'] ?>"
                                 class="text-emerald-500 text-sm font-bold hover:underline">
                                 Voir Sprints ->
                             </a>
