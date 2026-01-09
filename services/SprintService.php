@@ -1,35 +1,31 @@
 <?php
+require_once __DIR__ . '/../repositories/SprintRepository.php';
+require_once __DIR__ . '/../entities/Sprint.php';
 
-class SprintService
-{
-    private $repo;
+class SprintService {
+    private $sprintRepo;
 
-    public function __construct()
-    {
-        $this->repo = new SprintRepository();
+    public function __construct() {
+        $this->sprintRepo = new SprintRepository();
     }
 
-    public function createSprint($data)
-    {
-        if ($_SESSION['user']['role'] === 'MEMBRE') {
-            throw new Exception("Accès refusé");
+    public function createSprint(Sprint $sprint): bool {
+        // Vérification des dates
+        if ($sprint->getDateFin() < $sprint->getDateDebut()) {
+            throw new Exception("La date de fin doit être supérieure à la date de début");
         }
-
-        // if ($this->repo->hasDateConflict(
-        //     $data['id_projet'],
-        //     $data['date_debut'],
-        //     $data['date_fin']
-        // )) {
-        //     throw new Exception("Conflit de dates entre sprints");
-        // }
-
-        $sprint = new Sprint(
-            $data['titre'],
-            $data['date_debut'],
-            $data['date_fin'],
-            $data['id_projet']
-        );
-
-        return $this->repo->create($sprint);
+        return $this->sprintRepo->create($sprint);
     }
+
+    // public function updateSprint(Sprint $sprint): bool {
+    //     return $this->sprintRepo->update($sprint);
+    // }
+
+    // public function deleteSprint(int $id): bool {
+    //     return $this->sprintRepo->delete($id);
+    // }
+
+    // public function getSprintsByProjet(int $idProjet): array {
+    //     return $this->sprintRepo->getAllByProjet($idProjet);
+    // }
 }
