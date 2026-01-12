@@ -37,6 +37,12 @@ CREATE TABLE sprints (
     ON DELETE CASCADE
 );
 
+INSERT INTO sprints (titre, date_debut, date_fin, id_projet)
+VALUES ('Sprint 1', '2026-01-10', '2026-01-24', 1);
+
+ALTER TABLE sprints
+ADD COLUMN statut ENUM('A_VENIR','EN_COURS','TERMINEE') DEFAULT 'A_VENIR';
+
 SELECT * FROM sprints
 
 CREATE TABLE taches (

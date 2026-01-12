@@ -41,6 +41,6 @@ class ProjetRepository
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     
     // Retourne les données ou null si le projet n'existe pas
-    return $result ?: null;
+    return $result;
 }
 }

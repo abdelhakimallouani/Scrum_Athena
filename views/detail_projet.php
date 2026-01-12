@@ -8,6 +8,7 @@ if (!isset($_SESSION['user'])) {
 require_once '../config/config_db.php';
 require_once '../repositories/ProjetRepository.php';
 require_once '../repositories/SprintRepository.php';
+require_once '../services/SprintService.php';
 
 if (!isset($_GET['id'])) {
     header("Location: projets.php");
@@ -17,9 +18,10 @@ if (!isset($_GET['id'])) {
 $idProjet = $_GET['id'];
 
 $projetRepo = new ProjetRepository();
-$sprintRepo = new SprintRepository();
+$sprintRepo = new SprintService();
 
 $projet = $projetRepo->getProjetById($idProjet);
+$sprints = $sprintRepo->getSprintsByProjet($idProjet);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -70,7 +72,7 @@ $projet = $projetRepo->getProjetById($idProjet);
 
             <div class="flex items-center gap-3">
                 <img src="https://ui-avatars.com/api/?name=<?= $_SESSION['user']['nom_complet'] ?>"
-                     class="w-10 h-10 rounded-lg">
+                    class="w-10 h-10 rounded-lg">
                 <div>
                     <p class="text-sm font-bold"><?= $_SESSION['user']['nom_complet'] ?></p>
                     <p class="text-[10px] uppercase text-gray-400"><?= $_SESSION['user']['role'] ?></p>
@@ -105,42 +107,68 @@ $projet = $projetRepo->getProjetById($idProjet);
                 <?php if ($_SESSION['user']['role'] !== 'MEMBRE'): ?>
                     <div class="flex gap-2">
                         <a href="edit_projet.php?id=<?= $projet['id_projet'] ?>"
-                           class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-bold">
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-xl font-bold">
                             Modifier
                         </a>
 
                         <a href="../actions/delete_project.php?id=<?= $projet['id_projet'] ?>"
-                           class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold">
+                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold">
                             Supprimer
                         </a>
                     </div>
                 <?php endif; ?>
             </div>
+            <div class="flex justify-between">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">Sprints du projet</h3>
+                <button class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-xl font-bold cursor-pointer"
+                    onclick="window.location.href='create_sprint.php?projet_id=<?= $projet['id_projet'] ?>'">
+                    Ajouter un Sprint
+                </button>
+            </div>
 
-            <h3 class="text-2xl font-bold text-gray-800 mb-6">Sprints du projet</h3>
-
-            <?php if (empty($sprints)): ?>
-                <p class="text-gray-400">Aucun sprint pour ce projet.</p>
-            <?php else: ?>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="space-y-4 mt-4">
+                <?php if (empty($sprints)): ?>
+                    <p class="text-gray-400 flex justify-center items-center py-10">
+                        <i class="fas fa-info-circle mr-2"></i> Aucun sprint pour ce projet.
+                    </p>
+                <?php else: ?>
                     <?php foreach ($sprints as $sprint): ?>
-                        <div class="bg-white p-6 rounded-2xl shadow hover:shadow-md">
-                            <h4 class="font-bold text-gray-800 mb-2">
-                                <?= htmlspecialchars($sprint['nom']) ?>
-                            </h4>
-                            <p class="text-xs text-gray-500 mb-3">
-                                <?= htmlspecialchars($sprint['objectif']) ?>
-                            </p>
-                            <span class="text-[10px] font-bold uppercase px-2 py-1 rounded-full bg-emerald-100 text-emerald-600">
-                                <?= $sprint['statut'] ?>
-                            </span>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+                        <a href="detail_sprint.php?id=<?= $sprint['id_sprint'] ?>">
+                            <div class="bg-gray-100 p-6 rounded-2xl shadow-sm group-hover:shadow-md group-hover:bg-gray-200 transition-all flex justify-between items-center group-hover:border-emerald-200 mb-4">
+                                <div>
+                                    <h4 class="font-bold text-gray-800 mb-2">
+                                        <?= htmlspecialchars($sprint['titre']) ?>
+                                    </h4>
+                                    <p class="text-xs text-gray-500">
+                                        <i class="far fa-calendar-alt mr-1"></i>
+                                        Du <?= date('d/m/Y', strtotime($sprint['date_debut'])) ?>
+                                        au <?= date('d/m/Y', strtotime($sprint['date_fin'])) ?>
+                                    </p>
+                                </div>
 
+                                <div class="flex items-center gap-4">
+                                    <span class="text-[10px] font-bold uppercase px-3 py-1 rounded-full 
+                            <?php
+                            if ($sprint['statut'] === 'A_VENIR') {
+                                echo 'bg-gray-300 text-gray-600';
+                            } elseif ($sprint['statut'] === 'EN_COURS') {
+                                echo 'bg-orange-100 text-orange-600';
+                            } else {
+                                echo 'bg-emerald-100 text-emerald-600';
+                            }
+                            ?>">
+                                        <?= htmlspecialchars($sprint['statut']) ?>
+                                    </span>
+                                    <i class="fas fa-chevron-right text-gray-300 group-hover:text-emerald-500 transition-colors"></i>
+                                </div>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
         </section>
     </main>
 
 </body>
+
 </html>

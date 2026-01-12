@@ -2,19 +2,23 @@
 require_once __DIR__ . '/../repositories/SprintRepository.php';
 require_once __DIR__ . '/../entities/Sprint.php';
 
-class SprintService {
+class SprintService
+{
     private $sprintRepo;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->sprintRepo = new SprintRepository();
     }
 
-    public function createSprint(Sprint $sprint): bool {
-        // Vérification des dates
+
+    public function createSprint(Sprint $sprint, $statut)
+    {
+
         if ($sprint->getDateFin() < $sprint->getDateDebut()) {
-            throw new Exception("La date de fin doit être supérieure à la date de début");
+            throw new Exception("La date de fin doit etre superieure à la date de debut");
         }
-        return $this->sprintRepo->create($sprint);
+        return $this->sprintRepo->create($sprint, $statut);
     }
 
     // public function updateSprint(Sprint $sprint): bool {
@@ -25,7 +29,8 @@ class SprintService {
     //     return $this->sprintRepo->delete($id);
     // }
 
-    // public function getSprintsByProjet(int $idProjet): array {
-    //     return $this->sprintRepo->getAllByProjet($idProjet);
-    // }
+    public function getSprintsByProjet($idProjet)
+    {
+        return $this->sprintRepo->getAllByProjet($idProjet);
+    }
 }
